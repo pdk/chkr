@@ -124,6 +124,7 @@ func (c Checker) NotEqual(v1, v2 interface{}, args ...interface{}) {
 	c.Errorf(mesg, args...)
 }
 
+// ErrIs tests if errors.Is() returns true.
 func (c Checker) ErrIs(v1, v2 error, args ...interface{}) {
 
 	if errors.Is(v1, v2) {
@@ -142,6 +143,7 @@ func (c Checker) ErrIs(v1, v2 error, args ...interface{}) {
 	c.Errorf(mesg, args...)
 }
 
+// ErrAs tests if errors.As() returns true.
 func (c Checker) ErrAs(v1 error, v2 interface{}, args ...interface{}) {
 
 	if errors.As(v1, v2) {
