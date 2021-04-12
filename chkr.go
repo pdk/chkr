@@ -146,6 +146,9 @@ func (c Checker) ErrIs(v1, v2 error, args ...interface{}) {
 // ErrAs tests if errors.As() returns true.
 func (c Checker) ErrAs(v1 error, v2 interface{}, args ...interface{}) {
 
+	if reflect.TypeOf(v2).Kind() != reflect.Ptr {
+		v2 = reflect.New(reflect.TypeOf(v2)).Interface()
+	}
 	if errors.As(v1, v2) {
 		return
 	}

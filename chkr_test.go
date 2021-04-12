@@ -65,7 +65,7 @@ func TestFalse(t *testing.T) {
 	chk.Errorf("ack")
 }
 
-func TestErrorIs(t *testing.T) {
+func TestErrIs(t *testing.T) {
 	chk := chkr.New(t)
 
 	err := sql.ErrNoRows
@@ -76,7 +76,7 @@ func TestErrorIs(t *testing.T) {
 	chk.ErrIs(nil, sql.ErrNoRows, "let's see that message")
 }
 
-// minimal custom error
+// a custom error for errors.As()
 type myError struct {
 	msg string
 }
@@ -85,18 +85,20 @@ func (e myError) Error() string {
 	return e.msg
 }
 
-func TestErrorAs(t *testing.T) {
+func TestErrAs(t *testing.T) {
 	chk := chkr.New(t)
 
 	err := myError{"bork!"}
 
-	matched := myError{}
-	chk.ErrAs(err, &matched, "should pass")
-	chk.ErrAs(nil, &matched, "fail!!")
+	chk.ErrAs(err, myError{}, "should pass")
+	chk.ErrAs(nil, myError{}, "fail!!")
+
+	chk.ErrAs(err, &myError{}, "should pass 2")
+	chk.ErrAs(nil, &myError{}, "fail 2!!")
 
 	w := fmt.Errorf("wrap that myError: %w", err)
-	chk.ErrAs(w, &matched, "should pass")
-	chk.ErrAs(sql.ErrNoRows, &matched, "fail!!")
+	chk.ErrAs(w, myError{}, "should pass")
+	chk.ErrAs(sql.ErrNoRows, myError{}, "fail!!")
 }
 
 func TestAllTheThings(t *testing.T) {
